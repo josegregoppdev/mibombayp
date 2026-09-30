@@ -138,4 +138,4 @@ Reglas:
 - El `pom.xml` tiene elementos vacíos heredados (`<licenses>`, `<developers>`, `<scm>`) — no rellenar salvo que se pida.
 - Documentación de arranque de Spring en `HELP.md`.
 - Próximo trabajo (inventario + config global + validador POS): `pendiente_2026-09-29.txt` (nada implementado; decisiones: sin PIN, `controlaInventario` boolean solo-ADMIN en Producto e Ingrediente, caché en memoria pendiente de explicar).
-- Pendiente: empezar a usar git (el proyecto aún no es repo git: `git init`, primer commit con lo hecho hasta hoy y trabajo por ramas/commits desde ahí).
+- Git + GitHub activos desde 2026-09-30: repo `josegregoppdev/mibombayp`, rama `main`, trabajo por ramas/commits. No se suben `*.txt` ni `application.properties` (ver `.gitignore`); la plantilla es `application.properties.example`.
