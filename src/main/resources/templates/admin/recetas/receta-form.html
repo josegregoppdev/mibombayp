@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Receta')}"></head>
+<body class="bg-body-secondary">
+	<header th:replace="~{fragments/header :: cabecera}"></header>
+
+	<main class="container py-4" style="max-width: 720px;">
+		<h1 class="h3 mb-3" th:text="${edicion} ? 'Editar receta' : 'Nueva receta'">Nueva receta</h1>
+
+		<div class="alert alert-danger" th:if="${error}" th:text="${error}">Error</div>
+		<div class="alert alert-success" th:if="${exito}" th:text="${exito}">OK</div>
+
+		<form class="card bg-body-tertiary border-secondary mb-4"
+			th:object="${receta}"
+			th:action="${edicion} ? @{/admin/recetas/{id}(id=${receta.id})} : @{/admin/recetas}"
+			method="post">
+			<div class="card-body">
+				<div class="mb-3">
+					<label class="form-label" for="nombre">Nombre</label>
+					<input class="form-control" type="text" id="nombre" th:field="*{nombre}"
+						th:errorclass="is-invalid" required>
+					<div class="invalid-feedback" th:errors="*{nombre}">Error</div>
+				</div>
+
+				<div class="mb-3" th:if="${edicion}">
+					<label class="form-label" for="costo">Costo (suma de ingredientes)</label>
+					<input class="form-control" type="text" id="costo" th:field="*{costo}" readonly>
+				</div>
+
+				<div class="form-check mb-3" th:if="${edicion}">
+					<input class="form-check-input" type="checkbox" id="activo" th:field="*{activo}">
+					<label class="form-check-label" for="activo">Activo</label>
+				</div>
+
+				<div class="d-flex gap-2">
+					<button class="btn btn-warning" type="submit">Guardar</button>
+					<a class="btn btn-outline-secondary" th:href="@{/admin/recetas}">Volver</a>
+				</div>
+			</div>
+		</form>
+
+		<div class="card bg-body-tertiary border-secondary" th:if="${edicion}">
+			<div class="card-body">
+				<h2 class="h5 mb-3">Ingredientes de la receta</h2>
+
+				<div class="table-responsive mb-3">
+					<table class="table table-striped align-middle mb-0">
+						<thead>
+							<tr>
+								<th>Ingrediente</th>
+								<th>Cantidad</th>
+								<th>Unidad</th>
+								<th class="text-end">Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="d : ${detalles}">
+								<td th:text="${d.ingredienteNombre}">Tomate</td>
+								<td th:text="${d.cantidad}">0</td>
+								<td>
+									<span class="badge text-bg-secondary" th:text="${d.unidadMedida}">KG</span>
+								</td>
+								<td class="text-end">
+									<form class="d-inline"
+										th:action="@{/admin/recetas/{id}/detalles/{detalleId}/eliminar(id=${receta.id},detalleId=${d.id})}"
+										method="post">
+										<button class="btn btn-sm btn-outline-danger">Quitar</button>
+									</form>
+								</td>
+							</tr>
+							<tr th:if="${#lists.isEmpty(detalles)}">
+								<td colspan="4" class="text-center text-body-secondary">Sin ingredientes todavía.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<form class="row g-2"
+					th:object="${nuevoDetalle}"
+					th:action="@{/admin/recetas/{id}/detalles(id=${receta.id})}"
+					method="post">
+					<div class="col-md-5">
+						<label class="form-label" for="ingredienteId">Ingrediente</label>
+						<select class="form-select" id="ingredienteId" th:field="*{ingredienteId}"
+							th:errorclass="is-invalid">
+							<option th:each="i : ${ingredientes}" th:value="${i.id}" th:text="${i.nombre}">Tomate</option>
+						</select>
+						<div class="invalid-feedback" th:errors="*{ingredienteId}">Error</div>
+					</div>
+					<div class="col-md-3">
+						<label class="form-label" for="cantidad">Cantidad</label>
+						<input class="form-control" type="number" id="cantidad" th:field="*{cantidad}"
+							th:errorclass="is-invalid" min="0" step="0.001" required>
+						<div class="invalid-feedback" th:errors="*{cantidad}">Error</div>
+					</div>
+					<div class="col-md-2">
+						<label class="form-label" for="unidadMedida">Unidad</label>
+						<select class="form-select" id="unidadMedida" th:field="*{unidadMedida}"
+							th:errorclass="is-invalid">
+							<option th:each="u : ${unidades}" th:value="${u}" th:text="${u}">KG</option>
+						</select>
+						<div class="invalid-feedback" th:errors="*{unidadMedida}">Error</div>
+					</div>
+					<div class="col-md-2 d-flex align-items-end">
+						<button class="btn btn-success w-100" type="submit">Agregar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</main>
+</body>
+</html>

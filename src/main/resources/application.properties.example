@@ -1,0 +1,12 @@
+spring.application.name=empresa
+
+# MySQL - copiar este archivo como application.properties y rellenar
+# el nombre de la BD y la contraseña reales (nunca se sube al repo).
+spring.datasource.url=jdbc:mysql://localhost:3306/NOMBRE_BD?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+spring.datasource.username=root
+spring.datasource.password=CAMBIAR
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true

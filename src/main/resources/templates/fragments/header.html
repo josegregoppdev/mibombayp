@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<body>
+	<nav th:fragment="cabecera" class="navbar navbar-expand-lg bg-body-tertiary border-bottom border-warning-subtle">
+		<div class="container">
+			<a class="navbar-brand fw-bold text-decoration-none" th:href="@{/}">Sistema de Barra</a>
+			<div class="d-flex align-items-center gap-3">
+				<strong sec:authentication="name">usuario</strong>
+				<span class="badge text-bg-secondary" sec:authentication="principal.authorities">ROL</span>
+				<form th:action="@{/logout}" method="post" class="d-inline">
+					<button class="btn btn-outline-warning btn-sm" type="submit">Salir</button>
+				</form>
+			</div>
+		</div>
+	</nav>
+</body>
+</html>

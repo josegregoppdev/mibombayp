@@ -1,0 +1,5 @@
+/* Overrides mínimos sobre Bootstrap - modo oscuro */
+
+body {
+	min-height: 100vh;
+}

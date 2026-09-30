@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Usuarios')}"></head>
+<body class="bg-body-secondary">
+	<header th:replace="~{fragments/header :: cabecera}"></header>
+
+	<main class="container py-4">
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<h1 class="h3 mb-0">Gestión de usuarios</h1>
+			<a class="btn btn-warning" th:href="@{/admin/usuarios/nuevo}">Nuevo usuario</a>
+		</div>
+
+		<div class="alert alert-success" th:if="${exito}" th:text="${exito}">OK</div>
+		<div class="alert alert-danger" th:if="${error}" th:text="${error}">No se pudo completar la operación.</div>
+
+		<div class="card bg-body-tertiary border-secondary">
+			<div class="table-responsive">
+				<table class="table table-striped align-middle mb-0">
+					<thead>
+						<tr>
+							<th>Usuario</th>
+							<th>Nombre</th>
+							<th>Rol</th>
+							<th>Estado</th>
+							<th class="text-end">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="u : ${usuarios}">
+							<td th:text="${u.username}">admin</td>
+							<td th:text="${u.nombreCompleto}">Administrador</td>
+							<td>
+								<span class="badge"
+									th:classappend="${u.rol.name() == 'ADMIN'} ? 'text-bg-warning' : 'text-bg-secondary'"
+									th:text="${u.rol}">ADMIN</span>
+							</td>
+							<td>
+								<span class="badge"
+									th:classappend="${u.activo} ? 'text-bg-success' : 'text-bg-danger'"
+									th:text="${u.activo} ? 'Activo' : 'Inactivo'">Activo</span>
+							</td>
+							<td class="text-end">
+								<a class="btn btn-sm btn-outline-warning"
+									th:href="@{/admin/usuarios/{id}/editar(id=${u.id})}">Editar</a>
+								<form class="d-inline"
+									th:action="@{/admin/usuarios/{id}/activo(id=${u.id})}" method="post">
+									<button class="btn btn-sm"
+										th:classappend="${u.activo} ? 'btn-outline-danger' : 'btn-outline-success'"
+										th:text="${u.activo} ? 'Desactivar' : 'Activar'">Desactivar</button>
+								</form>
+							</td>
+						</tr>
+						<tr th:if="${#lists.isEmpty(usuarios)}">
+							<td colspan="5" class="text-center text-body-secondary">No hay usuarios registrados.</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</main>
+</body>
+</html>

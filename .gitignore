@@ -1,0 +1,27 @@
+# Notas de trabajo y datos locales (credenciales, pendientes, bitácoras)
+**/*.txt
+
+# Configuración real con credenciales (usar application.properties.example como plantilla)
+**/application.properties
+
+# Build Maven
+target/
+
+# IDEs y editores
+.idea/
+*.iml
+.vscode/
+*.code-workspace
+.settings/
+.classpath
+.project
+
+# Compilados y logs
+*.class
+*.log
+*.jar
+*.war
+
+# Sistema
+.DS_Store
+Thumbs.db

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Producto')}"></head>
+<body class="bg-body-secondary">
+	<header th:replace="~{fragments/header :: cabecera}"></header>
+
+	<main class="container py-4" style="max-width: 640px;">
+		<h1 class="h3 mb-3" th:text="${edicion} ? 'Editar producto' : 'Nuevo producto'">Nuevo producto</h1>
+
+		<div class="alert alert-danger" th:if="${error}" th:text="${error}">Error</div>
+
+		<form class="card bg-body-tertiary border-secondary"
+			th:object="${producto}"
+			th:action="${edicion} ? @{/admin/productos/{id}(id=${producto.id})} : @{/admin/productos}"
+			method="post">
+			<div class="card-body">
+				<div class="mb-3">
+					<label class="form-label" for="nombre">Nombre</label>
+					<input class="form-control" type="text" id="nombre" th:field="*{nombre}"
+						th:errorclass="is-invalid" required>
+					<div class="invalid-feedback" th:errors="*{nombre}">Error</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" for="categoria">Categoría</label>
+					<select class="form-select" id="categoria" th:field="*{categoria}" th:errorclass="is-invalid">
+						<option th:each="c : ${categorias}" th:value="${c}" th:text="${c}">COMIDA</option>
+					</select>
+					<div class="invalid-feedback" th:errors="*{categoria}">Error</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" for="stockActual">Stock actual</label>
+					<input class="form-control" type="number" id="stockActual" th:field="*{stockActual}"
+						th:errorclass="is-invalid" min="0" step="0.001" required>
+					<div class="invalid-feedback" th:errors="*{stockActual}">Error</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" for="stockMinimo">Stock mínimo</label>
+					<input class="form-control" type="number" id="stockMinimo" th:field="*{stockMinimo}"
+						th:errorclass="is-invalid" min="0" step="0.001" required>
+					<div class="invalid-feedback" th:errors="*{stockMinimo}">Error</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" for="costo">Costo</label>
+					<input class="form-control" type="number" id="costo" th:field="*{costo}"
+						th:errorclass="is-invalid" min="0" step="0.01" required>
+					<div class="invalid-feedback" th:errors="*{costo}">Error</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" for="precioVenta">Precio de venta</label>
+					<input class="form-control" type="number" id="precioVenta" th:field="*{precioVenta}"
+						th:errorclass="is-invalid" min="0" step="0.01" required>
+					<div class="invalid-feedback" th:errors="*{precioVenta}">Error</div>
+				</div>
+
+				<div class="form-check mb-3" th:if="${edicion}">
+					<input class="form-check-input" type="checkbox" id="activo" th:field="*{activo}">
+					<label class="form-check-label" for="activo">Activo</label>
+				</div>
+
+				<div class="d-flex gap-2">
+					<button class="btn btn-warning" type="submit">Guardar</button>
+					<a class="btn btn-outline-secondary" th:href="@{/admin/productos}">Cancelar</a>
+				</div>
+			</div>
+		</form>
+	</main>
+</body>
+</html>

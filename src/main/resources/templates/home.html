@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="~{fragments/head :: head('Inicio')}"></head>
+<body class="bg-body-secondary">
+	<header th:replace="~{fragments/header :: cabecera}"></header>
+
+	<main class="container py-4">
+		<h1 class="h3 mb-2">Bienvenido</h1>
+		<p class="text-body-secondary mb-4">
+			Hola <strong sec:authentication="principal.username">usuario</strong>, elige una opción:
+		</p>
+
+		<div class="row g-3">
+			<div class="col-md-4" sec:authorize="hasRole('ADMIN')">
+				<div class="card h-100 border-warning-subtle">
+					<div class="card-body">
+						<h2 class="h5 card-title">Administración</h2>
+						<p class="card-text text-body-secondary">Productos, categorías y reportes.</p>
+						<a class="btn btn-warning stretched-link" href="/admin">Entrar</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4" sec:authorize="hasAnyRole('ADMIN', 'CAJERO')">
+				<div class="card h-100 border-success-subtle">
+					<div class="card-body">
+						<h2 class="h5 card-title">Venta</h2>
+						<p class="card-text text-body-secondary">Comanda rápida y cobro en mostrador.</p>
+						<a class="btn btn-success stretched-link" href="/venta">Entrar</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4" sec:authorize="hasAnyRole('ADMIN', 'DEV')">
+				<div class="card h-100 border-secondary-subtle">
+					<div class="card-body">
+						<h2 class="h5 card-title">Usuarios</h2>
+						<p class="card-text text-body-secondary">Alta, edición y activación de usuarios.</p>
+						<a class="btn btn-outline-warning stretched-link" href="/admin/usuarios">Entrar</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4" sec:authorize="hasAnyRole('ADMIN', 'DEV')">
+				<div class="card h-100 border-secondary-subtle">
+					<div class="card-body">
+						<h2 class="h5 card-title">Ingredientes</h2>
+						<p class="card-text text-body-secondary">Catálogo, stock y unidades de medida.</p>
+						<a class="btn btn-outline-warning stretched-link" href="/admin/ingredientes">Entrar</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4" sec:authorize="hasAnyRole('ADMIN', 'DEV')">
+				<div class="card h-100 border-secondary-subtle">
+					<div class="card-body">
+						<h2 class="h5 card-title">Productos</h2>
+						<p class="card-text text-body-secondary">Catálogo, categorías, costo y precio.</p>
+						<a class="btn btn-outline-warning stretched-link" href="/admin/productos">Entrar</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4" sec:authorize="hasAnyRole('ADMIN', 'DEV')">
+				<div class="card h-100 border-secondary-subtle">
+					<div class="card-body">
+						<h2 class="h5 card-title">Recetas</h2>
+						<p class="card-text text-body-secondary">Nombre, ingredientes y costo automático.</p>
+						<a class="btn btn-outline-warning stretched-link" href="/admin/recetas">Entrar</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4" sec:authorize="hasAnyRole('ADMIN', 'DEV')">
+				<div class="card h-100 border-secondary-subtle">
+					<div class="card-body">
+						<h2 class="h5 card-title">Productos con receta</h2>
+						<p class="card-text text-body-secondary">Venta de preparados con precio propio.</p>
+						<a class="btn btn-outline-warning stretched-link" href="/admin/productos-con-receta">Entrar</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<p class="text-body-secondary small mt-4">Los módulos de administración y venta se implementarán en los próximos pasos.</p>
+	</main>
+</body>
+</html>
