@@ -26,12 +26,14 @@ Sistema de barra (venta en mostrador) para restaurante/bar — Spring Boot **4.1
   8. Ingredientes (catálogo + stock, CRUD admin) ← hecho (listado, alta, edición, activar/desactivar)
   9. Recetas + productos con receta ← hecho (Receta con nombre + costo auto = suma cantidad*valorCompra; DetalleReceta ingrediente+cantidad+unidad con unique(receta,ingrediente); ProductoConReceta 1-a-1 con receta + precioVenta >= costo; sin borrado físico)
 - Tras cada cambio: compilar (`./mvnw -q compile`) antes de dar por terminada la tarea.
+- **Tests módulo a módulo, junto con el módulo:** cada módulo nuevo sumo sus tests con la misma convención (ver sección Tests). Hoy cubierto: `util/ValidacionDatos` completo (35 tests) + `UsuarioService.listar()` (2 tests, Mockito).
 
 ## Comandos
 - Compilar: `./mvnw -q compile`
-- Tests: `./mvnw -q test`
+- Tests: `./mvnw test` (corre tests + genera reporte JaCoCo en `target/site/jacoco/index.html`)
+- Verificar (tests + regla de cobertura 90% controller/service): `./mvnw verify` → **ver NOTA importante de la sección Tests**
 - Ejecutar: `./mvnw spring-boot:run`
-- Empaquetar: `./mvnw -q package`
+- Empaquetar: `./mvnw -q package` (NO aplica la regla de cobertura; `verify` va después de `package`)
 
 No hay linter/formatter configurado; la verificación es compilación + tests de Maven.
 
@@ -60,8 +62,9 @@ src/main/resources/
 │   └── fragments/           # fragments reutilizables (head.html, header.html)
 └── static/css|js            # recursos estáticos (app.css = overrides Bootstrap)
 
-src/test/java/com/mibombay/empresa/   # tests JUnit 5 (@SpringBootTest)
-src/test/resources/application.properties   # H2 en memoria para tests
+src/test/java/com/mibombay/empresa/   # tests JUnit 5 (misma estructura que src/main: config/, controller/, dto/, ..., util/)
+                                      # TestValidacionDatos = 35 tests (suite completa, sin BD)
+src/test/resources/                   # NO existe todavía (los tests @SpringBootTest usan la config real y tocan MySQL)
 ```
 
 ## Convenciones
@@ -81,6 +84,21 @@ src/test/resources/application.properties   # H2 en memoria para tests
 - Vistas Thymeleaf: usar `th:action` y `sec:authorize` (dependencia `thymeleaf-extras-springsecurity6`) para el menú según rol.
 - Vistas por módulo: cada módulo tiene su subcarpeta (`templates/admin/<modulo>/`, `templates/venta/<modulo>/`, ...); no van vistas sueltas directo bajo `admin/` o `venta/`.
 - Tests: `Test` como prefijo del nombre de la clase bajo prueba (`TestUsuarioService`); métodos de test en camelCase; estructura Given/When/Then con comentarios y solo `Assertions` de JUnit 5.
+
+## Tests y cobertura (JaCoCo)
+- **Plugin JaCoCo 0.8.12** en el `pom.xml`: `prepare-agent` + `report` (fase `test`) + `check` (fase `verify`).
+- **Regla del check:** `LINE >= 90%` SOLO sobre `com.mibombay.empresa.controller.*` y `com.mibombay.empresa.service.*` (el resto del proyecto no cuenta para la regla).
+- **Reporte HTML:** `target/site/jacoco/index.html` (se genera con `./mvnw test` o `./mvnw verify`).
+- **Convención de tests** (ya aplicada en `TestValidacionDatos`):
+  1. Clase `Test` + clase bajo prueba (`TestValidacionDatos`, futuro `TestUsuarioService`).
+  2. Métodos camelCase: `metodo_escenario_resultado` (`requerido_valorNulo_lanzaExcepcion`).
+  3. Estructura Given/When/Then con comentarios.
+  4. Etiqueta de camino arriba de cada `@Test`: `// Camino feliz ...`, `// Null ...`, `// Excepción ...`.
+  5. Tests de services/controllers: JUnit 5 `Assertions` + **Mockito** (`@ExtendWith(MockitoExtension.class)`, `@Mock` para dependencias, `@InjectMocks` para el service bajo prueba). Tests de `util/` siguen solo-Assertions (sin mocks).
+  6. Cubrir: camino feliz, null y excepción (y listas/parámetros externos si aparecen).
+  7. **Datos falsos:** clase `DataProvider<Clase>` en la carpeta espejo (p. ej. `service/DataProviderUsuario.java`), solo métodos estáticos con constructor privado, que fabrica entidades/DTOs para los stubs (`usuarioValido()`, `listaUsuarios()`, `requestValido()`, ...).
+- **Alta de tests de un módulo nuevo:** crear la clase de test en la carpeta espejo (`src/test/java/com/mibombay/empresa/<paquete>/`) junto con el propio módulo, misma convención.
+- ✅ **RESUELTO (2026-10-01) — el falso verde de `./mvnw verify`:** la causa era una **mala configuración del plugin JaCoCo en el `pom.xml`** (el propio plugin estaba "bugueado": los `includes` no matcheaban ninguna clase y JaCoCo trataba la regla vacía como cumplida). Se corrigió poniendo `<element>CLASS</element>` con los `includes` de `controller.*`, `service.*` y `util.*`, y ahora el check **evalúa clase a clase y falla como corresponde** (BUILD FAILURE listando cada clase por debajo del 90%). El check ya es fiable como puerta de release.
 
 ## Fragments (Thymeleaf)
 Para no repetir código en cada HTML, todo lo común vive en `src/main/resources/templates/fragments/`:
@@ -132,7 +150,7 @@ Reglas:
 - Reglas de producto con receta: nunca se borran, `nombre` único, relación 1-a-1 con `Receta` (una receta solo en un producto), `precioVenta >= receta.costo` (el admin fija el precio viendo el costo).
 
 ## Notas y riesgos
-- **Todavía no hay tests** (decisión del usuario); la verificación real es `./mvnw -q compile` + arranque manual con MySQL.
+- **Tests:** hay 36 (35 de `TestValidacionDatos` sin BD + 1 `EmpresaApplicationTests` con `@SpringBootTest` que conecta a MySQL). La verificación diaria es `./mvnw -q compile` + `./mvnw test`. `./mvnw verify` aplica la regla de cobertura del 90% (ya fiable, ver sección "Tests y cobertura") y fallará hasta que existan tests de services/controllers.
 - Si falta config de datasource o la BD no existe, `spring-boot:run` fallará.
 - Tras el login, `/admin` y `/venta` pueden devolver 404 hasta que se implementen esos módulos: es esperado.
 - El `pom.xml` tiene elementos vacíos heredados (`<licenses>`, `<developers>`, `<scm>`) — no rellenar salvo que se pida.
