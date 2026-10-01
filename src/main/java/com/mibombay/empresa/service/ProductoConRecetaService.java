@@ -130,7 +130,7 @@ public class ProductoConRecetaService {
 	}
 
 	private Receta obtenerReceta(Long recetaId) {
-		ValidacionDatos.noNulo(recetaId, "La receta");
+		ValidacionDatos.requerido(recetaId, "La receta");
 		return recetaRepository.findById(recetaId)
 				.orElseThrow(() -> new NoSuchElementException("Receta no encontrada: " + recetaId));
 	}

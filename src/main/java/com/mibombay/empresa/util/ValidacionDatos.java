@@ -21,6 +21,9 @@ public final class ValidacionDatos {
 	// Métodos genéricos: valen para cualquier entidad
 	// ------------------------------------------------------------------
 
+	// Un solo concepto "requerido": para Strings valida vacío y devuelve
+	// recortado; para cualquier otro objeto (enum, Long, BigDecimal...)
+	// solo valida que no sea null y lo devuelve tal cual.
 	public static String requerido(String valor, String campo) {
 		if (valor == null || valor.isBlank()) {
 			throw new IllegalArgumentException(campo + ": no puede estar vacío");
@@ -28,11 +31,11 @@ public final class ValidacionDatos {
 		return valor.trim();
 	}
 
-	public static String opcional(String valor, String campo) {
-		if (valor == null || valor.isBlank()) {
-			return null;
+	public static Object requerido(Object valor, String campo) {
+		if (valor == null) {
+			throw new IllegalArgumentException(campo + ": no puede estar vacío");
 		}
-		return valor.trim();
+		return valor;
 	}
 
 	public static void longitudMaxima(String valor, int maximo, String campo) {
@@ -44,12 +47,6 @@ public final class ValidacionDatos {
 	public static void longitudMinima(String valor, int minimo, String campo) {
 		if (valor != null && valor.length() < minimo) {
 			throw new IllegalArgumentException(campo + ": mínimo " + minimo + " caracteres");
-		}
-	}
-
-	public static void noNulo(Object valor, String campo) {
-		if (valor == null) {
-			throw new IllegalArgumentException(campo + ": no puede estar vacío");
 		}
 	}
 
@@ -94,7 +91,7 @@ public final class ValidacionDatos {
 	}
 
 	public static java.math.BigDecimal stock(java.math.BigDecimal valor, String campo) {
-		noNulo(valor, campo);
+		requerido(valor, campo);
 		if (valor.signum() < 0) {
 			throw new IllegalArgumentException(campo + ": no puede ser negativo");
 		}

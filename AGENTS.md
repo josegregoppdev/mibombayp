@@ -80,7 +80,7 @@ src/test/resources/application.properties   # H2 en memoria para tests
 - **Logs con SLF4J (`LoggerFactory`):** solo `debug/info/warn` (sin `error` en negocio). `debug` para entradas `GET` y fallos de `@Valid` (`resultado.getErrorCount()`, sin dumpear campos); `info` para mutaciones OK con `id + username + rol` (p. ej. `Usuario creado: id={} username={} rol={}`); `warn` solo en `GlobalExceptionHandler` (no duplicar en service/controller). Siempre con `{}` sin concatenar y nunca `password`/hash.
 - Vistas Thymeleaf: usar `th:action` y `sec:authorize` (dependencia `thymeleaf-extras-springsecurity6`) para el menú según rol.
 - Vistas por módulo: cada módulo tiene su subcarpeta (`templates/admin/<modulo>/`, `templates/venta/<modulo>/`, ...); no van vistas sueltas directo bajo `admin/` o `venta/`.
-- Tests: mismo nombre de la clase bajo prueba (`UsuarioServiceTests`).
+- Tests: `Test` como prefijo del nombre de la clase bajo prueba (`TestUsuarioService`); métodos de test en camelCase; estructura Given/When/Then con comentarios y solo `Assertions` de JUnit 5.
 
 ## Fragments (Thymeleaf)
 Para no repetir código en cada HTML, todo lo común vive en `src/main/resources/templates/fragments/`:

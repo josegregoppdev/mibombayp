@@ -54,7 +54,7 @@ public class ProductoService {
 		log.debug("Creando producto nombre={} categoria={}", dto.getNombre(), dto.getCategoria());
 		String nombre = ValidacionDatos.nombre(dto.getNombre());
 		Categoria categoria = dto.getCategoria();
-		ValidacionDatos.noNulo(categoria, "La categoría");
+		ValidacionDatos.requerido(categoria, "La categoría");
 		BigDecimal stockActual = ValidacionDatos.stock(dto.getStockActual(), "El stock actual");
 		BigDecimal stockMinimo = ValidacionDatos.stock(dto.getStockMinimo(), "El stock mínimo");
 		BigDecimal costo = ValidacionDatos.stock(dto.getCosto(), "El costo");
@@ -86,7 +86,7 @@ public class ProductoService {
 		log.debug("Actualizando producto id={}", id);
 		String nombre = ValidacionDatos.nombre(dto.getNombre());
 		Categoria categoria = dto.getCategoria();
-		ValidacionDatos.noNulo(categoria, "La categoría");
+		ValidacionDatos.requerido(categoria, "La categoría");
 		BigDecimal stockActual = ValidacionDatos.stock(dto.getStockActual(), "El stock actual");
 		BigDecimal stockMinimo = ValidacionDatos.stock(dto.getStockMinimo(), "El stock mínimo");
 		BigDecimal costo = ValidacionDatos.stock(dto.getCosto(), "El costo");

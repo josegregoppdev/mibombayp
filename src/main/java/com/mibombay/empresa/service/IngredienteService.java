@@ -54,7 +54,7 @@ public class IngredienteService {
 		log.debug("Creando ingrediente nombre={} unidad={}", dto.getNombre(), dto.getUnidadMedida());
 		String nombre = ValidacionDatos.nombre(dto.getNombre());
 		UnidadMedida unidadMedida = dto.getUnidadMedida();
-		ValidacionDatos.noNulo(unidadMedida, "La unidad de medida");
+		ValidacionDatos.requerido(unidadMedida, "La unidad de medida");
 		BigDecimal stockActual = ValidacionDatos.stock(dto.getStockActual(), "El stock actual");
 		BigDecimal stockMinimo = ValidacionDatos.stock(dto.getStockMinimo(), "El stock mínimo");
 		BigDecimal valorCompra = ValidacionDatos.stock(dto.getValorCompra(), "El valor de compra");
@@ -87,7 +87,7 @@ public class IngredienteService {
 		log.debug("Actualizando ingrediente id={}", id);
 		String nombre = ValidacionDatos.nombre(dto.getNombre());
 		UnidadMedida unidadMedida = dto.getUnidadMedida();
-		ValidacionDatos.noNulo(unidadMedida, "La unidad de medida");
+		ValidacionDatos.requerido(unidadMedida, "La unidad de medida");
 		BigDecimal stockActual = ValidacionDatos.stock(dto.getStockActual(), "El stock actual");
 		BigDecimal stockMinimo = ValidacionDatos.stock(dto.getStockMinimo(), "El stock mínimo");
 		BigDecimal valorCompra = ValidacionDatos.stock(dto.getValorCompra(), "El valor de compra");

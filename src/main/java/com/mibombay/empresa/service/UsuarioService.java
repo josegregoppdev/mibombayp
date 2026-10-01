@@ -60,7 +60,7 @@ public class UsuarioService {
 		String password = ValidacionDatos.password(request.getPassword());
 		String nombreCompleto = ValidacionDatos.nombre(request.getNombreCompleto());
 		Rol rol = request.getRol();
-		ValidacionDatos.noNulo(rol, "El rol");
+		ValidacionDatos.requerido(rol, "El rol");
 
 		if (usuarioRepository.existsByUsername(username)) {
 			log.debug("Alta rechazada, username duplicado: {}", username);
@@ -85,7 +85,7 @@ public class UsuarioService {
 		log.debug("Actualizando usuario id={}", id);
 		String nombreCompleto = ValidacionDatos.nombre(request.getNombreCompleto());
 		Rol rol = request.getRol();
-		ValidacionDatos.noNulo(rol, "El rol");
+		ValidacionDatos.requerido(rol, "El rol");
 		String password = request.getPassword();
 		if (password != null && !password.isBlank()) {
 			password = ValidacionDatos.password(password);

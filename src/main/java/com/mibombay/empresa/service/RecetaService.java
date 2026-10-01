@@ -139,7 +139,7 @@ public class RecetaService {
 			throw new IllegalArgumentException("La cantidad: debe ser mayor a cero");
 		}
 		UnidadMedida unidadMedida = dto.getUnidadMedida();
-		ValidacionDatos.noNulo(unidadMedida, "La unidad de medida");
+		ValidacionDatos.requerido(unidadMedida, "La unidad de medida");
 
 		if (detalleRepository.existsByRecetaIdAndIngredienteId(receta.getId(), ingrediente.getId())) {
 			log.debug("Detalle rechazado, ingrediente duplicado en receta");
