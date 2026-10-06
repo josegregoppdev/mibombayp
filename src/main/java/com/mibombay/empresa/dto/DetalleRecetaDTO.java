@@ -17,7 +17,6 @@ public class DetalleRecetaDTO {
 
 	private Long id;
 
-	@NotNull(message = "La receta: no puede estar vacía")
 	private Long recetaId;
 
 	@NotNull(message = "El ingrediente: no puede estar vacío")
@@ -29,7 +28,7 @@ public class DetalleRecetaDTO {
 	@DecimalMin(value = "0.00", message = "La cantidad: no puede ser negativa")
 	private BigDecimal cantidad;
 
-	@NotNull(message = "La unidad de medida: no puede estar vacía")
+	// La fija RecetaService.agregarDetalle desde el ingrediente; no viaja en el form
 	private UnidadMedida unidadMedida;
 
 }

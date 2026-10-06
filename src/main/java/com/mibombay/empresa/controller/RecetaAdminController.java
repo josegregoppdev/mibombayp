@@ -15,7 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mibombay.empresa.dto.DetalleRecetaDTO;
 import com.mibombay.empresa.dto.RecetaDTO;
-import com.mibombay.empresa.model.UnidadMedida;
 import com.mibombay.empresa.service.IngredienteService;
 import com.mibombay.empresa.service.RecetaService;
 
@@ -132,7 +131,6 @@ public class RecetaAdminController {
 		model.addAttribute("detalles", recetaService.listarDetalles(recetaId));
 		model.addAttribute("ingredientes", ingredienteService.listar().stream()
 				.filter(i -> i.isActivo()).toList());
-		model.addAttribute("unidades", UnidadMedida.values());
 		model.addAttribute("nuevoDetalle", detalle);
 	}
 

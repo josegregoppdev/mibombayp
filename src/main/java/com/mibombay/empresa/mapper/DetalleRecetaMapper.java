@@ -18,6 +18,7 @@ public interface DetalleRecetaMapper {
 
 	List<DetalleRecetaDTO> toDTOList(List<DetalleReceta> detalles);
 
+	@Mapping(target = "id", ignore = true)
 	@Mapping(target = "receta", ignore = true)
 	@Mapping(target = "ingrediente", ignore = true)
 	DetalleReceta toEntity(DetalleRecetaDTO dto);

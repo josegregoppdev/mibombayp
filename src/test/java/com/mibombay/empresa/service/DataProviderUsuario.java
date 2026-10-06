@@ -52,7 +52,7 @@ public final class DataProviderUsuario {
 		return List.of(admin, cajero, dev);
 	}
 
-	// Request completo y válido (para futuros tests de crear/actualizar)
+	// Request completo y válido (base para los tests de crear/actualizar)
 	public static UsuarioDTORequest requestValido() {
 		UsuarioDTORequest request = new UsuarioDTORequest();
 		request.setUsername("nuevo.usuario");
@@ -60,6 +60,20 @@ public final class DataProviderUsuario {
 		request.setNombreCompleto("Usuario Nuevo");
 		request.setRol(Rol.CAJERO);
 		request.setActivo(true);
+		return request;
+	}
+
+	// Request válido sin password (para probar que actualizar no toca la contraseña)
+	public static UsuarioDTORequest requestSinPassword() {
+		UsuarioDTORequest request = requestValido();
+		request.setPassword(null);
+		return request;
+	}
+
+	// Request válido con activo=false (para probar la regla del único ADMIN activo)
+	public static UsuarioDTORequest requestDesactivado() {
+		UsuarioDTORequest request = requestValido();
+		request.setActivo(false);
 		return request;
 	}
 

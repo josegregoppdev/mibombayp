@@ -79,28 +79,21 @@
 					th:object="${nuevoDetalle}"
 					th:action="@{/admin/recetas/{id}/detalles(id=${receta.id})}"
 					method="post">
-					<div class="col-md-5">
-						<label class="form-label" for="ingredienteId">Ingrediente</label>
-						<select class="form-select" id="ingredienteId" th:field="*{ingredienteId}"
-							th:errorclass="is-invalid">
-							<option th:each="i : ${ingredientes}" th:value="${i.id}" th:text="${i.nombre}">Tomate</option>
-						</select>
-						<div class="invalid-feedback" th:errors="*{ingredienteId}">Error</div>
-					</div>
-					<div class="col-md-3">
-						<label class="form-label" for="cantidad">Cantidad</label>
-						<input class="form-control" type="number" id="cantidad" th:field="*{cantidad}"
-							th:errorclass="is-invalid" min="0" step="0.001" required>
-						<div class="invalid-feedback" th:errors="*{cantidad}">Error</div>
-					</div>
-					<div class="col-md-2">
-						<label class="form-label" for="unidadMedida">Unidad</label>
-						<select class="form-select" id="unidadMedida" th:field="*{unidadMedida}"
-							th:errorclass="is-invalid">
-							<option th:each="u : ${unidades}" th:value="${u}" th:text="${u}">KG</option>
-						</select>
-						<div class="invalid-feedback" th:errors="*{unidadMedida}">Error</div>
-					</div>
+				<div class="col-md-6">
+					<label class="form-label" for="ingredienteId">Ingrediente</label>
+					<select class="form-select" id="ingredienteId" th:field="*{ingredienteId}"
+						th:errorclass="is-invalid">
+						<option th:each="i : ${ingredientes}" th:value="${i.id}" th:text="${i.nombre} + ' (' + ${i.unidadMedida} + ')'">Tomate (KG)</option>
+					</select>
+					<div class="invalid-feedback" th:errors="*{ingredienteId}">Error</div>
+				</div>
+				<div class="col-md-4">
+					<label class="form-label" for="cantidad">Cantidad</label>
+					<input class="form-control" type="number" id="cantidad" th:field="*{cantidad}"
+						th:errorclass="is-invalid" min="0" step="0.001" required>
+					<div class="form-text">La unidad es la del ingrediente seleccionado.</div>
+					<div class="invalid-feedback" th:errors="*{cantidad}">Error</div>
+				</div>
 					<div class="col-md-2 d-flex align-items-end">
 						<button class="btn btn-success w-100" type="submit">Agregar</button>
 					</div>

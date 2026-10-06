@@ -126,7 +126,9 @@ public class RecetaService {
 	@PreAuthorize("hasAnyRole('DEV', 'ADMIN')")
 	public DetalleRecetaDTO agregarDetalle(DetalleRecetaDTO dto) {
 		log.debug("Agregando detalle recetaId={} ingredienteId={}", dto.getRecetaId(), dto.getIngredienteId());
+		ValidacionDatos.requerido(dto.getRecetaId(),"La receta");
 		Receta receta = obtenerEntidad(dto.getRecetaId());
+
 		Ingrediente ingrediente = ingredienteRepository.findById(dto.getIngredienteId())
 				.orElseThrow(() -> new NoSuchElementException("Ingrediente no encontrado: " + dto.getIngredienteId()));
 		if (!ingrediente.isActivo()) {
@@ -138,8 +140,8 @@ public class RecetaService {
 			log.debug("Detalle rechazado, cantidad no positiva");
 			throw new IllegalArgumentException("La cantidad: debe ser mayor a cero");
 		}
-		UnidadMedida unidadMedida = dto.getUnidadMedida();
-		ValidacionDatos.requerido(unidadMedida, "La unidad de medida");
+		UnidadMedida unidadMedida = ingrediente.getUnidadMedida();
+		ValidacionDatos.requerido(unidadMedida, "La unidad de medida del ingrediente");
 
 		if (detalleRepository.existsByRecetaIdAndIngredienteId(receta.getId(), ingrediente.getId())) {
 			log.debug("Detalle rechazado, ingrediente duplicado en receta");
