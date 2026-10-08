@@ -1,5 +1,7 @@
 package com.mibombay.empresa.config;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -17,10 +19,13 @@ public class DataInitializer implements CommandLineRunner {
 
 	private final UsuarioRepository usuarioRepository;
 	private final UsuarioService usuarioService;
+	private final List<DataSeeder> seeders;
 
-	public DataInitializer(UsuarioRepository usuarioRepository, UsuarioService usuarioService) {
+	public DataInitializer(UsuarioRepository usuarioRepository, UsuarioService usuarioService,
+			List<DataSeeder> seeders) {
 		this.usuarioRepository = usuarioRepository;
 		this.usuarioService = usuarioService;
+		this.seeders = seeders;
 	}
 
 	@Override
@@ -28,6 +33,7 @@ public class DataInitializer implements CommandLineRunner {
 		crearSiNoExiste("admin", "admin123", "Administrador", Rol.ADMIN);
 		crearSiNoExiste("cajero", "cajero123", "Cajero", Rol.CAJERO);
 		crearSiNoExiste("dev", "dev123", "Desarrollador", Rol.DEV);
+		seeders.forEach(DataSeeder::sembrar);
 	}
 
 	private void crearSiNoExiste(String username, String password, String nombreCompleto, Rol rol) {

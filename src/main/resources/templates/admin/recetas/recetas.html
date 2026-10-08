@@ -21,6 +21,7 @@
 							<th>Nombre</th>
 							<th>Costo</th>
 							<th>Estado</th>
+							<th>Uso</th>
 							<th class="text-end">Acciones</th>
 						</tr>
 					</thead>
@@ -32,6 +33,11 @@
 								<span class="badge"
 									th:classappend="${r.activo} ? 'text-bg-success' : 'text-bg-danger'"
 									th:text="${r.activo} ? 'Activo' : 'Inactivo'">Activo</span>
+							</td>
+							<td>
+								<span class="badge"
+									th:classappend="${r.enUso} ? 'text-bg-warning' : 'text-bg-secondary'"
+									th:text="${r.enUso} ? 'En uso' : 'Libre'">Libre</span>
 							</td>
 							<td class="text-end">
 								<a class="btn btn-sm btn-outline-success"
@@ -45,7 +51,7 @@
 							</td>
 						</tr>
 						<tr th:if="${#lists.isEmpty(recetas)}">
-							<td colspan="4" class="text-center text-body-secondary">No hay recetas registradas.</td>
+							<td colspan="5" class="text-center text-body-secondary">No hay recetas registradas.</td>
 						</tr>
 					</tbody>
 				</table>

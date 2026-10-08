@@ -62,6 +62,22 @@
 					<label class="form-check-label" for="esAdicional">Es adicional (se vende como extra)</label>
 				</div>
 
+				<div class="mb-3">
+					<label class="form-label" for="porcionAdicional">Porción adicional</label>
+					<input class="form-control" type="number" id="porcionAdicional" th:field="*{porcionAdicional}"
+						th:errorclass="is-invalid" min="0" step="0.001" required>
+					<div class="invalid-feedback" th:errors="*{porcionAdicional}">Error</div>
+					<div class="form-text">Cantidad que se agrega por extra, en la unidad del ingrediente. Solo tiene sentido si es adicional.</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" for="precioAdicional">Precio adicional</label>
+					<input class="form-control" type="number" id="precioAdicional" th:field="*{precioAdicional}"
+						th:errorclass="is-invalid" min="0" step="0.01" required>
+					<div class="invalid-feedback" th:errors="*{precioAdicional}">Error</div>
+					<div class="form-text">Lo que cobra el cliente por cada extra.</div>
+				</div>
+
 				<div class="form-check mb-3" th:if="${edicion}">
 					<input class="form-check-input" type="checkbox" id="activo" th:field="*{activo}">
 					<label class="form-check-label" for="activo">Activo</label>

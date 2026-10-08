@@ -44,6 +44,12 @@ public class Ingrediente {
 	@Column(name = "valor_venta", nullable = false, precision = 12, scale = 2)
 	private BigDecimal valorVenta = BigDecimal.ZERO;
 
+	@Column(name = "porcion_adicional", nullable = false, precision = 12, scale = 3)
+	private BigDecimal porcionAdicional = BigDecimal.ZERO;
+
+	@Column(name = "precio_adicional", nullable = false, precision = 12, scale = 2)
+	private BigDecimal precioAdicional = BigDecimal.ZERO;
+
 	@Column(name = "es_adicional", nullable = false)
 	private boolean esAdicional = true;
 

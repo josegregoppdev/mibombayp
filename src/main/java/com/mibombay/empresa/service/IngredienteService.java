@@ -59,6 +59,8 @@ public class IngredienteService {
 		BigDecimal stockMinimo = ValidacionDatos.stock(dto.getStockMinimo(), "El stock mínimo");
 		BigDecimal valorCompra = ValidacionDatos.stock(dto.getValorCompra(), "El valor de compra");
 		BigDecimal valorVenta = ValidacionDatos.stock(dto.getValorVenta(), "El valor de venta");
+		BigDecimal porcionAdicional = ValidacionDatos.stock(dto.getPorcionAdicional(), "La porción adicional");
+		BigDecimal precioAdicional = ValidacionDatos.stock(dto.getPrecioAdicional(), "El precio adicional");
 		validarMargen(valorCompra, valorVenta);
 
 		if (ingredienteRepository.existsByNombreIgnoreCase(nombre)) {
@@ -73,6 +75,8 @@ public class IngredienteService {
 		ingrediente.setStockMinimo(stockMinimo);
 		ingrediente.setValorCompra(valorCompra);
 		ingrediente.setValorVenta(valorVenta);
+		ingrediente.setPorcionAdicional(porcionAdicional);
+		ingrediente.setPrecioAdicional(precioAdicional);
 		ingrediente.setEsAdicional(dto.isEsAdicional());
 		ingrediente.setActivo(true);
 		IngredienteDTO respuesta = ingredienteMapper.toDTO(ingredienteRepository.save(ingrediente));
@@ -92,6 +96,8 @@ public class IngredienteService {
 		BigDecimal stockMinimo = ValidacionDatos.stock(dto.getStockMinimo(), "El stock mínimo");
 		BigDecimal valorCompra = ValidacionDatos.stock(dto.getValorCompra(), "El valor de compra");
 		BigDecimal valorVenta = ValidacionDatos.stock(dto.getValorVenta(), "El valor de venta");
+		BigDecimal porcionAdicional = ValidacionDatos.stock(dto.getPorcionAdicional(), "La porción adicional");
+		BigDecimal precioAdicional = ValidacionDatos.stock(dto.getPrecioAdicional(), "El precio adicional");
 		validarMargen(valorCompra, valorVenta);
 
 		Ingrediente ingrediente = obtenerEntidad(id);
@@ -107,6 +113,8 @@ public class IngredienteService {
 		ingrediente.setStockMinimo(stockMinimo);
 		ingrediente.setValorCompra(valorCompra);
 		ingrediente.setValorVenta(valorVenta);
+		ingrediente.setPorcionAdicional(porcionAdicional);
+		ingrediente.setPrecioAdicional(precioAdicional);
 		ingrediente.setEsAdicional(dto.isEsAdicional());
 		ingrediente.setActivo(dto.isActivo());
 		IngredienteDTO respuesta = ingredienteMapper.toDTO(ingredienteRepository.save(ingrediente));

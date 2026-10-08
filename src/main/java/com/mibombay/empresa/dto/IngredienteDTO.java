@@ -42,6 +42,14 @@ public class IngredienteDTO {
 	@DecimalMin(value = "0.00", message = "El valor de venta: no puede ser negativo")
 	private BigDecimal valorVenta;
 
+	@NotNull(message = "La porción adicional: no puede estar vacía")
+	@DecimalMin(value = "0.00", message = "La porción adicional: no puede ser negativa")
+	private BigDecimal porcionAdicional = BigDecimal.ZERO;
+
+	@NotNull(message = "El precio adicional: no puede estar vacío")
+	@DecimalMin(value = "0.00", message = "El precio adicional: no puede ser negativo")
+	private BigDecimal precioAdicional = BigDecimal.ZERO;
+
 	private boolean esAdicional = true;
 
 	private boolean activo;

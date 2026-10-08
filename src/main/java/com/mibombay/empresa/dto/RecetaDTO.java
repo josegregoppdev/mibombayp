@@ -21,6 +21,8 @@ public class RecetaDTO {
 
 	private BigDecimal costo = BigDecimal.ZERO;
 
+	private boolean enUso;
+
 	private boolean activo;
 
 }

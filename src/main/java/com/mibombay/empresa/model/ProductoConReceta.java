@@ -35,6 +35,9 @@ public class ProductoConReceta {
 	@Column(name = "precio_venta", nullable = false, precision = 12, scale = 2)
 	private BigDecimal precioVenta = BigDecimal.ZERO;
 
+	@Column(name = "admite_adicionales", nullable = false)
+	private boolean admiteAdicionales = true;
+
 	@Column(nullable = false)
 	private boolean activo = true;
 

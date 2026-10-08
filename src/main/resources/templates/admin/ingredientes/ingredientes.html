@@ -24,6 +24,8 @@
 							<th>Stock mínimo</th>
 							<th>Compra</th>
 							<th>Venta</th>
+							<th>Porción extra</th>
+							<th>Precio extra</th>
 							<th>Adicional</th>
 							<th>Estado</th>
 							<th class="text-end">Acciones</th>
@@ -39,6 +41,17 @@
 							<td th:text="${i.stockMinimo}">0</td>
 							<td th:text="${i.valorCompra}">0</td>
 							<td th:text="${i.valorVenta}">0</td>
+							<td>
+								<span th:if="${i.esAdicional}">
+									<span th:text="${i.porcionAdicional}">0</span>
+									<span class="badge text-bg-secondary" th:text="${i.unidadMedida}">KG</span>
+								</span>
+								<span th:unless="${i.esAdicional}" class="text-body-secondary">—</span>
+							</td>
+							<td>
+								<span th:if="${i.esAdicional}" th:text="${i.precioAdicional}">0</span>
+								<span th:unless="${i.esAdicional}" class="text-body-secondary">—</span>
+							</td>
 							<td>
 								<span class="badge"
 									th:classappend="${i.esAdicional} ? 'text-bg-warning' : 'text-bg-secondary'"
@@ -61,7 +74,7 @@
 							</td>
 						</tr>
 						<tr th:if="${#lists.isEmpty(ingredientes)}">
-							<td colspan="9" class="text-center text-body-secondary">No hay ingredientes registrados.</td>
+							<td colspan="11" class="text-center text-body-secondary">No hay ingredientes registrados.</td>
 						</tr>
 					</tbody>
 				</table>

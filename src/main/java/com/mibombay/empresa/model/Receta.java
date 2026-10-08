@@ -29,6 +29,9 @@ public class Receta {
 	@Column(nullable = false, precision = 12, scale = 2)
 	private BigDecimal costo = BigDecimal.ZERO;
 
+	@Column(name = "en_uso", nullable = false)
+	private boolean enUso = false;
+
 	@Column(nullable = false)
 	private boolean activo = true;
 

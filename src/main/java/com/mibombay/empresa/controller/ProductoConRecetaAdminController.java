@@ -1,5 +1,7 @@
 package com.mibombay.empresa.controller;
 
+import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mibombay.empresa.dto.ProductoConRecetaDTO;
+import com.mibombay.empresa.dto.RecetaDTO;
 import com.mibombay.empresa.service.ProductoConRecetaService;
 import com.mibombay.empresa.service.RecetaService;
 
@@ -46,7 +49,7 @@ public class ProductoConRecetaAdminController {
 	public String nuevo(Model model) {
 		log.debug("GET /admin/productos-con-receta/nuevo");
 		model.addAttribute("producto", new ProductoConRecetaDTO());
-		model.addAttribute("recetas", recetaService.listar().stream().filter(r -> r.isActivo()).toList());
+		model.addAttribute("recetas", recetasDisponibles(new ProductoConRecetaDTO()));
 		model.addAttribute("edicion", false);
 		return "admin/productos-con-receta/producto-con-receta-form";
 	}
@@ -56,7 +59,7 @@ public class ProductoConRecetaAdminController {
 			BindingResult resultado, Model model, RedirectAttributes ra) {
 		if (resultado.hasErrors()) {
 			log.debug("Validación @Valid fallida en alta: {} errores", resultado.getErrorCount());
-			model.addAttribute("recetas", recetaService.listar().stream().filter(r -> r.isActivo()).toList());
+			model.addAttribute("recetas", recetasDisponibles(producto));
 			model.addAttribute("edicion", false);
 			return "admin/productos-con-receta/producto-con-receta-form";
 		}
@@ -69,8 +72,9 @@ public class ProductoConRecetaAdminController {
 	@GetMapping("/{id}/editar")
 	public String editar(@PathVariable Long id, Model model) {
 		log.debug("GET /admin/productos-con-receta/{}/editar", id);
-		model.addAttribute("producto", productoService.obtenerPorId(id));
-		model.addAttribute("recetas", recetaService.listar().stream().filter(r -> r.isActivo()).toList());
+		ProductoConRecetaDTO producto = productoService.obtenerPorId(id);
+		model.addAttribute("producto", producto);
+		model.addAttribute("recetas", recetasDisponibles(producto));
 		model.addAttribute("edicion", true);
 		return "admin/productos-con-receta/producto-con-receta-form";
 	}
@@ -82,7 +86,7 @@ public class ProductoConRecetaAdminController {
 		producto.setId(id);
 		if (resultado.hasErrors()) {
 			log.debug("Validación @Valid fallida en edición id={}: {} errores", id, resultado.getErrorCount());
-			model.addAttribute("recetas", recetaService.listar().stream().filter(r -> r.isActivo()).toList());
+			model.addAttribute("recetas", recetasDisponibles(producto));
 			model.addAttribute("edicion", true);
 			return "admin/productos-con-receta/producto-con-receta-form";
 		}
@@ -99,6 +103,14 @@ public class ProductoConRecetaAdminController {
 				respuesta.isActivo());
 		ra.addFlashAttribute("exito", "Estado del producto actualizado correctamente.");
 		return "redirect:/admin/productos-con-receta";
+	}
+
+	private List<RecetaDTO> recetasDisponibles(ProductoConRecetaDTO producto) {
+		return recetaService.listar().stream()
+				.filter(r -> r.isActivo())
+				.filter(r -> !r.isEnUso()
+						|| (producto.getRecetaId() != null && r.getId().equals(producto.getRecetaId())))
+				.toList();
 	}
 
 }

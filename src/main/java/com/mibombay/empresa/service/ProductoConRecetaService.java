@@ -74,7 +74,10 @@ public class ProductoConRecetaService {
 		producto.setNombre(nombre);
 		producto.setReceta(receta);
 		producto.setPrecioVenta(precioVenta);
+		producto.setAdmiteAdicionales(dto.isAdmiteAdicionales());
 		producto.setActivo(true);
+		receta.setEnUso(true);
+		recetaRepository.save(receta);
 		ProductoConRecetaDTO respuesta = productoMapper.toDTO(productoRepository.save(producto));
 		log.info("Producto con receta creado: id={} nombre={} receta={}", respuesta.getId(),
 				respuesta.getNombre(), receta.getNombre());
@@ -96,8 +99,9 @@ public class ProductoConRecetaService {
 			log.debug("Actualización rechazada, nombre duplicado: {}", nombre);
 			throw new IllegalArgumentException("Ya existe un producto con ese nombre");
 		}
-		if (!producto.getReceta().getId().equals(receta.getId())
-				&& productoRepository.existsByRecetaId(receta.getId())) {
+		Receta recetaAnterior = producto.getReceta();
+		boolean cambiaReceta = !recetaAnterior.getId().equals(receta.getId());
+		if (cambiaReceta && productoRepository.existsByRecetaId(receta.getId())) {
 			log.debug("Actualización rechazada, receta ya asignada id={}", receta.getId());
 			throw new IllegalArgumentException("La receta ya está asignada a otro producto");
 		}
@@ -105,7 +109,14 @@ public class ProductoConRecetaService {
 		producto.setNombre(nombre);
 		producto.setReceta(receta);
 		producto.setPrecioVenta(precioVenta);
+		producto.setAdmiteAdicionales(dto.isAdmiteAdicionales());
 		producto.setActivo(dto.isActivo());
+		if (cambiaReceta) {
+			recetaAnterior.setEnUso(false);
+			receta.setEnUso(true);
+			recetaRepository.save(recetaAnterior);
+			recetaRepository.save(receta);
+		}
 		ProductoConRecetaDTO respuesta = productoMapper.toDTO(productoRepository.save(producto));
 		log.info("Producto con receta actualizado: id={} nombre={} activo={}", respuesta.getId(),
 				respuesta.getNombre(), respuesta.isActivo());
