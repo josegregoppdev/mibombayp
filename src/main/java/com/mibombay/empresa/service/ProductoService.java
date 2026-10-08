@@ -125,6 +125,29 @@ public class ProductoService {
 		return respuesta;
 	}
 
+	@Transactional
+	@PreAuthorize("hasAnyRole('DEV', 'ADMIN')")
+	public void ingresarStock(Long id, BigDecimal cantidad, BigDecimal costo) {
+		log.debug("Ingresando stock productoId={} cantidad={}", id, cantidad);
+		ValidacionDatos.requerido(id, "El producto");
+		BigDecimal ingreso = ValidacionDatos.stock(cantidad, "La cantidad");
+		if (ingreso.signum() <= 0) {
+			log.debug("Ingreso rechazado, cantidad no positiva");
+			throw new IllegalArgumentException("La cantidad: debe ser mayor a cero");
+		}
+		BigDecimal valor = ValidacionDatos.stock(costo, "El costo");
+
+		Producto producto = obtenerEntidad(id);
+		if (!producto.isActivo()) {
+			log.debug("Ingreso rechazado, producto inactivo id={}", id);
+			throw new IllegalArgumentException("El producto está inactivo");
+		}
+		producto.setStockActual(producto.getStockActual().add(ingreso));
+		producto.setCosto(valor);
+		productoRepository.save(producto);
+		log.info("Stock ingresado: productoId={} cantidad={} costo={}", id, ingreso, valor);
+	}
+
 	private Producto obtenerEntidad(Long id) {
 		return productoRepository.findById(id)
 				.orElseThrow(() -> new NoSuchElementException("Producto no encontrado: " + id));

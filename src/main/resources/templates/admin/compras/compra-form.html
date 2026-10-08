@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Compra')}"></head>
+<body class="bg-body-secondary">
+	<header th:replace="~{fragments/header :: cabecera}"></header>
+
+	<main class="container py-4" style="max-width: 960px;">
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<h1 class="h3 mb-0" th:text="${edicion} ? 'Compra #' + ${compra.id} : 'Nueva compra'">Nueva compra</h1>
+			<span class="badge" th:if="${edicion}"
+				th:classappend="${compra.estado == 'BORRADOR'} ? 'text-bg-secondary' : 'text-bg-success'"
+				th:text="${compra.estado == 'BORRADOR'} ? 'Borrador' : 'Confirmada'">Borrador</span>
+		</div>
+
+		<div class="alert alert-danger" th:if="${error}" th:text="${error}">Error</div>
+		<div class="alert alert-success" th:if="${exito}" th:text="${exito}">OK</div>
+
+		<form class="card bg-body-tertiary border-secondary mb-4" th:if="${!edicion or compra.estado == 'BORRADOR'}"
+			th:object="${compra}"
+			th:action="${edicion} ? @{/admin/compras/{id}(id=${compra.id})} : @{/admin/compras}"
+			method="post">
+			<div class="card-body">
+				<h2 class="h5 mb-3">Datos de la compra</h2>
+
+				<div class="mb-3">
+					<label class="form-label" for="proveedorId">Proveedor</label>
+					<select class="form-select" id="proveedorId" th:field="*{proveedorId}">
+						<option value="">Sin proveedor (por defecto)</option>
+						<option th:each="p : ${proveedores}" th:value="${p.id}"
+							th:text="${p.nombre} + ' (' + ${p.dniNit} + ')'">Proveedor (000000000-0)</option>
+					</select>
+					<div class="form-text">Obligatorio: si no se escoge, se usa el proveedor por defecto.</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" for="observaciones">Observaciones</label>
+					<input class="form-control" type="text" id="observaciones" th:field="*{observaciones}"
+						th:errorclass="is-invalid" maxlength="255">
+					<div class="invalid-feedback" th:errors="*{observaciones}">Error</div>
+				</div>
+
+				<div class="mb-3" th:if="${edicion}">
+					<label class="form-label" for="fecha">Fecha</label>
+					<input class="form-control" type="text" id="fecha" th:field="*{fecha}" readonly>
+				</div>
+
+				<div class="mb-3" th:if="${edicion}">
+					<label class="form-label" for="total">Total compra</label>
+					<input class="form-control" type="text" id="total" th:field="*{total}" readonly>
+				</div>
+
+				<div class="d-flex gap-2">
+					<button class="btn btn-warning" type="submit" th:text="${edicion} ? 'Guardar' : 'Crear compra'">Guardar</button>
+					<a class="btn btn-outline-secondary" th:href="@{/admin/compras}">Volver</a>
+				</div>
+			</div>
+		</form>
+
+		<div class="card bg-body-tertiary border-secondary mb-4" th:if="${edicion and compra.estado == 'CONFIRMADA'}">
+			<div class="card-body">
+				<h2 class="h5 mb-3">Datos de la compra</h2>
+				<dl class="row mb-0">
+					<dt class="col-sm-3 text-body-secondary">Proveedor</dt>
+					<dd class="col-sm-9" th:text="${compra.proveedorNombre}">Proveedor</dd>
+					<dt class="col-sm-3 text-body-secondary">Fecha</dt>
+					<dd class="col-sm-9" th:text="${compra.fecha}">01/01/2026 00:00</dd>
+					<dt class="col-sm-3 text-body-secondary">Total</dt>
+					<dd class="col-sm-9" th:text="${compra.total}">0</dd>
+					<dt class="col-sm-3 text-body-secondary">Observaciones</dt>
+					<dd class="col-sm-9" th:text="${compra.observaciones != null ? compra.observaciones : '—'}">—</dd>
+				</dl>
+				<div class="mt-3">
+					<a class="btn btn-outline-secondary" th:href="@{/admin/compras}">Volver</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="card bg-body-tertiary border-secondary mb-4" th:if="${edicion}">
+			<div class="card-body">
+				<h2 class="h5 mb-3">Líneas de la compra</h2>
+
+				<div class="table-responsive mb-3">
+					<table class="table table-striped align-middle mb-0">
+						<thead>
+							<tr>
+								<th>Tipo</th>
+								<th>Ítem</th>
+								<th>Cantidad</th>
+								<th>Unidad</th>
+								<th class="text-end">Costo Compra</th>
+								<th class="text-end">Subtotal</th>
+								<th class="text-end">Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="d : ${detalles}">
+								<td>
+									<span class="badge text-bg-secondary"
+										th:text="${d.tipo == 'INGREDIENTE'} ? 'Ingrediente' : 'Producto'">Ingrediente</span>
+								</td>
+								<td
+									th:text="${d.ingredienteNombre != null} ? ${d.ingredienteNombre} : ${d.productoNombre}">Ítem</td>
+								<td th:text="${d.cantidad}">0</td>
+								<td>
+									<span class="badge text-bg-secondary"
+										th:text="${d.unidadMedida != null} ? ${d.unidadMedida} : 'UND'">UND</span>
+								</td>
+								<td class="text-end" th:text="${d.precioUnitario}">0</td>
+								<td class="text-end" th:text="${d.subtotal}">0</td>
+								<td class="text-end">
+									<form class="d-inline" th:if="${compra.estado == 'BORRADOR'}"
+										th:action="@{/admin/compras/{id}/detalles/{detalleId}/eliminar(id=${compra.id},detalleId=${d.id})}"
+										method="post">
+										<button class="btn btn-sm btn-outline-danger">Quitar</button>
+									</form>
+								</td>
+							</tr>
+							<tr th:if="${#lists.isEmpty(detalles)}">
+								<td colspan="7" class="text-center text-body-secondary">Sin líneas todavía.</td>
+							</tr>
+						</tbody>
+						<tfoot th:if="${!#lists.isEmpty(detalles)}">
+							<tr>
+								<td colspan="5" class="text-end fw-bold">Total</td>
+								<td class="text-end fw-bold" th:text="${compra.total}">0</td>
+								<td></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+
+				<div th:if="${compra.estado == 'BORRADOR'}">
+					<hr>
+					<h3 class="h6 mb-2">Agregar ingrediente</h3>
+					<form class="row g-2 mb-3"
+						th:object="${nuevoDetalleIngrediente}"
+						th:action="@{/admin/compras/{id}/detalles(id=${compra.id})}"
+						method="post">
+						<div class="col-md-5">
+							<label class="form-label" for="ingredienteId">Ingrediente</label>
+							<select class="form-select" id="ingredienteId" th:field="*{ingredienteId}"
+								th:errorclass="is-invalid">
+								<option th:each="i : ${ingredientes}" th:value="${i.id}"
+									th:text="${i.nombre} + ' (' + ${i.unidadMedida} + ')'">Tomate (KG)</option>
+							</select>
+							<div class="invalid-feedback" th:errors="*{ingredienteId}">Error</div>
+						</div>
+						<div class="col-md-3">
+							<label class="form-label" for="cantidadIng">Cantidad</label>
+							<input class="form-control" type="number" id="cantidadIng" th:field="*{cantidad}"
+								th:errorclass="is-invalid" min="0" step="0.001" required>
+							<div class="invalid-feedback" th:errors="*{cantidad}">Error</div>
+						</div>
+						<div class="col-md-2">
+							<label class="form-label" for="precioIng">Costo Compra</label>
+							<input class="form-control" type="number" id="precioIng" th:field="*{precioUnitario}"
+								th:errorclass="is-invalid" min="0" step="0.01" required>
+							<div class="invalid-feedback" th:errors="*{precioUnitario}">Error</div>
+						</div>
+						<div class="col-md-2 d-flex align-items-end">
+							<button class="btn btn-success w-100" type="submit">Agregar</button>
+						</div>
+					</form>
+
+					<h3 class="h6 mb-2">Agregar producto (sin receta)</h3>
+					<form class="row g-2"
+						th:object="${nuevoDetalleProducto}"
+						th:action="@{/admin/compras/{id}/detalles-producto(id=${compra.id})}"
+						method="post">
+						<div class="col-md-5">
+							<label class="form-label" for="productoId">Producto</label>
+							<select class="form-select" id="productoId" th:field="*{productoId}"
+								th:errorclass="is-invalid">
+								<option th:each="p : ${productos}" th:value="${p.id}" th:text="${p.nombre}">Producto</option>
+							</select>
+							<div class="invalid-feedback" th:errors="*{productoId}">Error</div>
+						</div>
+						<div class="col-md-3">
+							<label class="form-label" for="cantidadProd">Cantidad</label>
+							<input class="form-control" type="number" id="cantidadProd" th:field="*{cantidad}"
+								th:errorclass="is-invalid" min="0" step="0.001" required>
+							<div class="invalid-feedback" th:errors="*{cantidad}">Error</div>
+						</div>
+						<div class="col-md-2">
+							<label class="form-label" for="precioProd">Costo Compra</label>
+							<input class="form-control" type="number" id="precioProd" th:field="*{precioUnitario}"
+								th:errorclass="is-invalid" min="0" step="0.01" required>
+							<div class="invalid-feedback" th:errors="*{precioUnitario}">Error</div>
+						</div>
+						<div class="col-md-2 d-flex align-items-end">
+							<button class="btn btn-success w-100" type="submit">Agregar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<form th:if="${edicion and compra.estado == 'BORRADOR' and !#lists.isEmpty(detalles)}"
+			th:action="@{/admin/compras/{id}/confirmar(id=${compra.id})}" method="post">
+			<button class="btn btn-success" type="submit">Confirmar compra (ajustar inventario)</button>
+		</form>
+	</main>
+</body>
+</html>

@@ -58,10 +58,8 @@ public class IngredienteService {
 		BigDecimal stockActual = ValidacionDatos.stock(dto.getStockActual(), "El stock actual");
 		BigDecimal stockMinimo = ValidacionDatos.stock(dto.getStockMinimo(), "El stock mínimo");
 		BigDecimal valorCompra = ValidacionDatos.stock(dto.getValorCompra(), "El valor de compra");
-		BigDecimal valorVenta = ValidacionDatos.stock(dto.getValorVenta(), "El valor de venta");
 		BigDecimal porcionAdicional = ValidacionDatos.stock(dto.getPorcionAdicional(), "La porción adicional");
 		BigDecimal precioAdicional = ValidacionDatos.stock(dto.getPrecioAdicional(), "El precio adicional");
-		validarMargen(valorCompra, valorVenta);
 
 		if (ingredienteRepository.existsByNombreIgnoreCase(nombre)) {
 			log.debug("Alta rechazada, nombre duplicado: {}", nombre);
@@ -74,7 +72,6 @@ public class IngredienteService {
 		ingrediente.setStockActual(stockActual);
 		ingrediente.setStockMinimo(stockMinimo);
 		ingrediente.setValorCompra(valorCompra);
-		ingrediente.setValorVenta(valorVenta);
 		ingrediente.setPorcionAdicional(porcionAdicional);
 		ingrediente.setPrecioAdicional(precioAdicional);
 		ingrediente.setEsAdicional(dto.isEsAdicional());
@@ -95,10 +92,8 @@ public class IngredienteService {
 		BigDecimal stockActual = ValidacionDatos.stock(dto.getStockActual(), "El stock actual");
 		BigDecimal stockMinimo = ValidacionDatos.stock(dto.getStockMinimo(), "El stock mínimo");
 		BigDecimal valorCompra = ValidacionDatos.stock(dto.getValorCompra(), "El valor de compra");
-		BigDecimal valorVenta = ValidacionDatos.stock(dto.getValorVenta(), "El valor de venta");
 		BigDecimal porcionAdicional = ValidacionDatos.stock(dto.getPorcionAdicional(), "La porción adicional");
 		BigDecimal precioAdicional = ValidacionDatos.stock(dto.getPrecioAdicional(), "El precio adicional");
-		validarMargen(valorCompra, valorVenta);
 
 		Ingrediente ingrediente = obtenerEntidad(id);
 		if (!ingrediente.getNombre().equalsIgnoreCase(nombre)
@@ -112,7 +107,6 @@ public class IngredienteService {
 		ingrediente.setStockActual(stockActual);
 		ingrediente.setStockMinimo(stockMinimo);
 		ingrediente.setValorCompra(valorCompra);
-		ingrediente.setValorVenta(valorVenta);
 		ingrediente.setPorcionAdicional(porcionAdicional);
 		ingrediente.setPrecioAdicional(precioAdicional);
 		ingrediente.setEsAdicional(dto.isEsAdicional());
@@ -135,16 +129,32 @@ public class IngredienteService {
 		return respuesta;
 	}
 
+	@Transactional
+	@PreAuthorize("hasAnyRole('DEV', 'ADMIN')")
+	public void ingresarStock(Long id, BigDecimal cantidad, BigDecimal valorCompra) {
+		log.debug("Ingresando stock ingredienteId={} cantidad={}", id, cantidad);
+		ValidacionDatos.requerido(id, "El ingrediente");
+		BigDecimal ingreso = ValidacionDatos.stock(cantidad, "La cantidad");
+		if (ingreso.signum() <= 0) {
+			log.debug("Ingreso rechazado, cantidad no positiva");
+			throw new IllegalArgumentException("La cantidad: debe ser mayor a cero");
+		}
+		BigDecimal valor = ValidacionDatos.stock(valorCompra, "El valor de compra");
+
+		Ingrediente ingrediente = obtenerEntidad(id);
+		if (!ingrediente.isActivo()) {
+			log.debug("Ingreso rechazado, ingrediente inactivo id={}", id);
+			throw new IllegalArgumentException("El ingrediente está inactivo");
+		}
+		ingrediente.setStockActual(ingrediente.getStockActual().add(ingreso));
+		ingrediente.setValorCompra(valor);
+		ingredienteRepository.save(ingrediente);
+		log.info("Stock ingresado: ingredienteId={} cantidad={} valorCompra={}", id, ingreso, valor);
+	}
+
 	private Ingrediente obtenerEntidad(Long id) {
 		return ingredienteRepository.findById(id)
 				.orElseThrow(() -> new NoSuchElementException("Ingrediente no encontrado: " + id));
-	}
-
-	private void validarMargen(BigDecimal valorCompra, BigDecimal valorVenta) {
-		if (valorVenta.compareTo(valorCompra) < 0) {
-			log.debug("Operación rechazada, venta menor que compra");
-			throw new IllegalArgumentException("El valor de venta no puede ser menor al valor de compra");
-		}
 	}
 
 }

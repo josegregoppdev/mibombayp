@@ -10,6 +10,8 @@ public interface DetalleRecetaRepository extends JpaRepository<DetalleReceta, Lo
 
 	List<DetalleReceta> findByRecetaId(Long recetaId);
 
+	List<DetalleReceta> findByIngredienteId(Long ingredienteId);
+
 	boolean existsByRecetaIdAndIngredienteId(Long recetaId, Long ingredienteId);
 
 }

@@ -22,8 +22,7 @@
 							<th>Unidad</th>
 							<th>Stock actual</th>
 							<th>Stock mínimo</th>
-							<th>Compra</th>
-							<th>Venta</th>
+							<th>Costo Compra</th>
 							<th>Porción extra</th>
 							<th>Precio extra</th>
 							<th>Adicional</th>
@@ -40,7 +39,6 @@
 							<td th:text="${i.stockActual}">0</td>
 							<td th:text="${i.stockMinimo}">0</td>
 							<td th:text="${i.valorCompra}">0</td>
-							<td th:text="${i.valorVenta}">0</td>
 							<td>
 								<span th:if="${i.esAdicional}">
 									<span th:text="${i.porcionAdicional}">0</span>
@@ -74,7 +72,7 @@
 							</td>
 						</tr>
 						<tr th:if="${#lists.isEmpty(ingredientes)}">
-							<td colspan="11" class="text-center text-body-secondary">No hay ingredientes registrados.</td>
+							<td colspan="10" class="text-center text-body-secondary">No hay ingredientes registrados.</td>
 						</tr>
 					</tbody>
 				</table>

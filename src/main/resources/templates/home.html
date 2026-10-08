@@ -75,6 +75,33 @@
 					</div>
 				</div>
 			</div>
+			<div class="col-md-4" sec:authorize="hasAnyRole('ADMIN', 'DEV')">
+				<div class="card h-100 border-secondary-subtle">
+					<div class="card-body">
+						<h2 class="h5 card-title">Clientes</h2>
+						<p class="card-text text-body-secondary">Contactos, DNI/NIT y datos de clientes.</p>
+						<a class="btn btn-outline-warning stretched-link" href="/admin/clientes">Entrar</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4" sec:authorize="hasAnyRole('ADMIN', 'DEV')">
+				<div class="card h-100 border-secondary-subtle">
+					<div class="card-body">
+						<h2 class="h5 card-title">Proveedores</h2>
+						<p class="card-text text-body-secondary">Contactos, DNI/NIT y datos de proveedores.</p>
+						<a class="btn btn-outline-warning stretched-link" href="/admin/proveedores">Entrar</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4" sec:authorize="hasAnyRole('ADMIN', 'DEV')">
+				<div class="card h-100 border-secondary-subtle">
+					<div class="card-body">
+						<h2 class="h5 card-title">Compras</h2>
+						<p class="card-text text-body-secondary">Entradas de ingredientes y productos al inventario.</p>
+						<a class="btn btn-outline-warning stretched-link" href="/admin/compras">Entrar</a>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<p class="text-body-secondary small mt-4">Los módulos de administración y venta se implementarán en los próximos pasos.</p>

@@ -20,9 +20,8 @@
 						<tr>
 							<th>Nombre</th>
 							<th>Receta</th>
-							<th>Costo receta</th>
-							<th>Precio venta</th>
-							<th>Adicionales</th>
+							<th>Costo Receta</th>
+							<th>Precio de Venta</th>
 							<th>Estado</th>
 							<th class="text-end">Acciones</th>
 						</tr>
@@ -33,11 +32,6 @@
 							<td th:text="${p.recetaNombre}">Receta base</td>
 							<td th:text="${p.recetaCosto}">0</td>
 							<td th:text="${p.precioVenta}">0</td>
-							<td>
-								<span class="badge"
-									th:classappend="${p.admiteAdicionales} ? 'text-bg-warning' : 'text-bg-secondary'"
-									th:text="${p.admiteAdicionales} ? 'Sí' : 'No'">Sí</span>
-							</td>
 							<td>
 								<span class="badge"
 									th:classappend="${p.activo} ? 'text-bg-success' : 'text-bg-danger'"
@@ -55,7 +49,7 @@
 							</td>
 						</tr>
 						<tr th:if="${#lists.isEmpty(productos)}">
-							<td colspan="7" class="text-center text-body-secondary">No hay productos registrados.</td>
+							<td colspan="6" class="text-center text-body-secondary">No hay productos registrados.</td>
 						</tr>
 					</tbody>
 				</table>

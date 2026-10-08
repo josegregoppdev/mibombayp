@@ -24,6 +24,10 @@ public class SecurityConfig {
 				.requestMatchers("/admin/productos", "/admin/productos/**").hasAnyRole("DEV", "ADMIN")
 				.requestMatchers("/admin/recetas", "/admin/recetas/**").hasAnyRole("DEV", "ADMIN")
 				.requestMatchers("/admin/productos-con-receta", "/admin/productos-con-receta/**").hasAnyRole("DEV", "ADMIN")
+				.requestMatchers("/admin/clientes", "/admin/clientes/**").hasAnyRole("DEV", "ADMIN")
+				.requestMatchers("/admin/proveedores", "/admin/proveedores/**").hasAnyRole("DEV", "ADMIN")
+
+				.requestMatchers("/admin/compras", "/admin/compras/**").hasAnyRole("DEV", "ADMIN")
 				.requestMatchers("/admin/**").hasRole("ADMIN")
 				.requestMatchers("/venta/**").hasAnyRole("ADMIN", "CAJERO")
 				.anyRequest().authenticated()

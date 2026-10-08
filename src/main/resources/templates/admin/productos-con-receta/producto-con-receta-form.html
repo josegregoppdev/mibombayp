@@ -31,16 +31,11 @@
 				</div>
 
 				<div class="mb-3">
-					<label class="form-label" for="precioVenta">Precio de venta</label>
+					<label class="form-label" for="precioVenta">Precio de Venta</label>
 					<input class="form-control" type="number" id="precioVenta" th:field="*{precioVenta}"
 						th:errorclass="is-invalid" min="0" step="0.01" required>
 					<div class="invalid-feedback" th:errors="*{precioVenta}">Error</div>
 					<div class="form-text">Debe ser mayor o igual al costo de la receta.</div>
-				</div>
-
-				<div class="form-check mb-3">
-					<input class="form-check-input" type="checkbox" id="admiteAdicionales" th:field="*{admiteAdicionales}">
-					<label class="form-check-label" for="admiteAdicionales">Admite adicionales (extras de ingredientes)</label>
 				</div>
 
 				<div class="form-check mb-3" th:if="${edicion}">

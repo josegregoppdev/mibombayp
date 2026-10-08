@@ -41,9 +41,6 @@ public class Ingrediente {
 	@Column(name = "valor_compra", nullable = false, precision = 12, scale = 2)
 	private BigDecimal valorCompra = BigDecimal.ZERO;
 
-	@Column(name = "valor_venta", nullable = false, precision = 12, scale = 2)
-	private BigDecimal valorVenta = BigDecimal.ZERO;
-
 	@Column(name = "porcion_adicional", nullable = false, precision = 12, scale = 3)
 	private BigDecimal porcionAdicional = BigDecimal.ZERO;
 

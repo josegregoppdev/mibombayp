@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Proveedor')}"></head>
+<body class="bg-body-secondary">
+	<header th:replace="~{fragments/header :: cabecera}"></header>
+
+	<main class="container py-4" style="max-width: 640px;">
+		<h1 class="h3 mb-3" th:text="${edicion} ? 'Editar proveedor' : 'Nuevo proveedor'">Nuevo proveedor</h1>
+
+		<div class="alert alert-danger" th:if="${error}" th:text="${error}">Error</div>
+
+		<form class="card bg-body-tertiary border-secondary"
+			th:object="${proveedor}"
+			th:action="${edicion} ? @{/admin/proveedores/{id}(id=${proveedor.id})} : @{/admin/proveedores}"
+			method="post">
+			<div class="card-body">
+				<div class="mb-3">
+					<label class="form-label" for="nombre">Nombre / Nombre jurídico</label>
+					<input class="form-control" type="text" id="nombre" th:field="*{nombre}"
+						th:errorclass="is-invalid" required>
+					<div class="invalid-feedback" th:errors="*{nombre}">Error</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" for="apellido">Apellido</label>
+					<input class="form-control" type="text" id="apellido" th:field="*{apellido}"
+						th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{apellido}">Error</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" for="dniNit">DNI / NIT</label>
+					<input class="form-control" type="text" id="dniNit" th:field="*{dniNit}"
+						th:errorclass="is-invalid" maxlength="15" required>
+					<div class="invalid-feedback" th:errors="*{dniNit}">Error</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" for="direccion">Dirección</label>
+					<input class="form-control" type="text" id="direccion" th:field="*{direccion}"
+						th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{direccion}">Error</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" for="telefono">Teléfono</label>
+					<input class="form-control" type="text" id="telefono" th:field="*{telefono}"
+						th:errorclass="is-invalid" maxlength="15">
+					<div class="invalid-feedback" th:errors="*{telefono}">Error</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" for="email">Email</label>
+					<input class="form-control" type="email" id="email" th:field="*{email}"
+						th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{email}">Error</div>
+				</div>
+
+				<div class="form-check mb-3" th:if="${edicion}">
+					<input class="form-check-input" type="checkbox" id="activo" th:field="*{activo}">
+					<label class="form-check-label" for="activo">Activo</label>
+				</div>
+
+				<div class="d-flex gap-2">
+					<button class="btn btn-warning" type="submit">Guardar</button>
+					<a class="btn btn-outline-secondary" th:href="@{/admin/proveedores}">Cancelar</a>
+				</div>
+			</div>
+		</form>
+	</main>
+</body>
+</html>

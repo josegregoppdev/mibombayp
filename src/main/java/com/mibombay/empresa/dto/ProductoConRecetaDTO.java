@@ -32,8 +32,6 @@ public class ProductoConRecetaDTO {
 	@DecimalMin(value = "0.00", message = "El precio de venta: no puede ser negativo")
 	private BigDecimal precioVenta;
 
-	private boolean admiteAdicionales = true;
-
 	private boolean activo;
 
 }

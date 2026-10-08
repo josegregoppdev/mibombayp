@@ -172,6 +172,21 @@ public class RecetaService {
 		log.info("Detalle eliminado: id={} recetaId={}", detalleId, recetaId);
 	}
 
+	@Transactional
+	@PreAuthorize("hasAnyRole('DEV', 'ADMIN')")
+	public void recalcularCostosPorIngrediente(Long ingredienteId) {
+		log.debug("Recalculando costos de recetas por ingredienteId={}", ingredienteId);
+		ValidacionDatos.requerido(ingredienteId, "El ingrediente");
+		List<Long> recetaIds = detalleRepository.findByIngredienteId(ingredienteId).stream()
+				.map(d -> d.getReceta().getId())
+				.distinct()
+				.toList();
+		for (Long recetaId : recetaIds) {
+			recalcularCosto(recetaId);
+		}
+		log.info("Costos recalculados por ingredienteId={} recetas afectadas={}", ingredienteId, recetaIds.size());
+	}
+
 	private Receta obtenerEntidad(Long id) {
 		return recetaRepository.findById(id)
 				.orElseThrow(() -> new NoSuchElementException("Receta no encontrada: " + id));

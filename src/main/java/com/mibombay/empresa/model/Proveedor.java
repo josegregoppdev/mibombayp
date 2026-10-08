@@ -1,39 +1,43 @@
 package com.mibombay.empresa.model;
 
-import java.math.BigDecimal;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "producto_con_receta")
+@Table(name = "proveedor")
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductoConReceta {
+public class Proveedor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, unique = true, length = 100)
+	@Column(nullable = false, length = 100)
 	private String nombre;
 
-	@OneToOne(optional = false)
-	@JoinColumn(name = "receta_id", nullable = false, unique = true)
-	private Receta receta;
+	@Column(length = 100)
+	private String apellido;
 
-	@Column(name = "precio_venta", nullable = false, precision = 12, scale = 2)
-	private BigDecimal precioVenta = BigDecimal.ZERO;
+	@Column(name = "dni_nit", nullable = false, unique = true, length = 15)
+	private String dniNit;
+
+	@Column(length = 100)
+	private String direccion;
+
+	@Column(length = 15)
+	private String telefono;
+
+	@Column(length = 100)
+	private String email;
 
 	@Column(nullable = false)
 	private boolean activo = true;

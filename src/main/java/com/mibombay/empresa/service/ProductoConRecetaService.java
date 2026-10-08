@@ -74,7 +74,6 @@ public class ProductoConRecetaService {
 		producto.setNombre(nombre);
 		producto.setReceta(receta);
 		producto.setPrecioVenta(precioVenta);
-		producto.setAdmiteAdicionales(dto.isAdmiteAdicionales());
 		producto.setActivo(true);
 		receta.setEnUso(true);
 		recetaRepository.save(receta);
@@ -109,7 +108,6 @@ public class ProductoConRecetaService {
 		producto.setNombre(nombre);
 		producto.setReceta(receta);
 		producto.setPrecioVenta(precioVenta);
-		producto.setAdmiteAdicionales(dto.isAdmiteAdicionales());
 		producto.setActivo(dto.isActivo());
 		if (cambiaReceta) {
 			recetaAnterior.setEnUso(false);
